@@ -1,0 +1,22 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build output
+bin/
+obj/
+
+# Native DLLs copied at build time (GeomagicCore, OpenHaptics, etc.)
+*.dll
+*.pdb
+*.lib
+*.exp
+
+# NuGet
+*.nupkg
+project.lock.json
+project.nuget.cache
+packages/

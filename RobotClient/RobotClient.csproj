@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- GeomagicCore.dll is a Win32 (x86) native DLL; the process must be 32-bit. -->
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OxyPlot.WindowsForms" Version="2.1.2" />
+    <PackageReference Include="System.IO.Ports" Version="10.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ViperCore\ViperCore\ViperCore.csproj" />
+  </ItemGroup>
+
+  <!-- Copy GeomagicCore.dll from its C++ build output next to the exe after build. -->
+  <Target Name="CopyGeomagicCoreDll" AfterTargets="Build">
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\..\..\GeomagicCore\$(Configuration)\GeomagicCore.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" ContinueOnError="true" />
+  </Target>
+
+  <!-- Copy Dynamixel native DLL next to the exe. Place dxl_x86_c.dll in ViperCore/ViperCore/ or update the path. -->
+  <Target Name="CopyDynamixelDll" AfterTargets="Build">
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\..\..\ViperCore\ViperCore\dxl_x86_c.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" ContinueOnError="true" />
+  </Target>
+
+</Project>

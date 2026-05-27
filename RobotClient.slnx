@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="RobotClient/RobotClient.csproj" />
+  <Project Path="..\ViperCore\ViperCore\ViperCore.csproj" />
+</Solution>
