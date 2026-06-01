@@ -10,6 +10,7 @@ namespace RobotClient
         private DateTime _motionStart;
         private System.Windows.Forms.Timer? _elapsedTimer;
         private bool     _interpreterRunning;
+        private int      _interpreterGeneration;
         private DateTime _interpreterRecordingStart;
 
         public GeomagicControl()
@@ -67,6 +68,7 @@ namespace RobotClient
 
         void IRobotHost.SetMotionState(string text, Color color)
         {
+            if (_interpreterRunning) return;
             robotStateLabelValue.Text      = text;
             robotStateLabelValue.ForeColor = color;
         }
@@ -142,10 +144,12 @@ namespace RobotClient
             _gcodeCts?.Cancel();
             _gcodeCts = new CancellationTokenSource();
 
-            _interpreterRunning            = true;
-            _interpreterRecordingStart     = DateTime.UtcNow;
-            robotStateLabelValue.Text      = "Ejecutando";
+            int gen = ++_interpreterGeneration;
+            _interpreterRunning        = true;
+            _interpreterRecordingStart = DateTime.UtcNow;
+            robotStateLabelValue.Text      = "Ejecutando instrucciones";
             robotStateLabelValue.ForeColor = Color.Orange;
+            statusStrip1.Refresh(); // force immediate repaint before first async yield
             plotsControl.BeginRecording();
             try
             {
@@ -154,11 +158,15 @@ namespace RobotClient
             catch (OperationCanceledException) { }
             finally
             {
-                _interpreterRunning            = false;
-                _showElapsed                   = false;
-                plotsControl.StopRecording();
-                robotStateLabelValue.Text      = "En destino";
-                robotStateLabelValue.ForeColor = Color.Green;
+                // Skip if a newer run already took over (cancelled-run race condition).
+                if (_interpreterGeneration == gen)
+                {
+                    _interpreterRunning            = false;
+                    _showElapsed                   = false;
+                    plotsControl.StopRecording();
+                    robotStateLabelValue.Text      = "En destino";
+                    robotStateLabelValue.ForeColor = Color.Green;
+                }
             }
         }
     }
