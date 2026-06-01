@@ -17,7 +17,7 @@ namespace RobotClient
             bttnCalibrate       = new Button();
             tbDeviceName        = new TextBox();
             bttnConnect         = new Button();
-            bttnDisconnect      = new Button();
+
             lblDeviceName       = new Label();
             statusStrip1        = new StatusStrip();
             statusLabelPrefix   = new ToolStripStatusLabel();
@@ -87,7 +87,7 @@ namespace RobotClient
             panel1.Controls.Add(bttnCalibrate);
             panel1.Controls.Add(tbDeviceName);
             panel1.Controls.Add(bttnConnect);
-            panel1.Controls.Add(bttnDisconnect);
+
             panel1.Controls.Add(lblDeviceName);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
@@ -122,16 +122,7 @@ namespace RobotClient
             bttnConnect.Text = "Conectar";
             bttnConnect.UseVisualStyleBackColor = true;
             bttnConnect.Click += bttnConnect_Click;
-            //
-            // bttnDisconnect
-            //
-            bttnDisconnect.Location = new Point(567, 22);
-            bttnDisconnect.Name = "bttnDisconnect";
-            bttnDisconnect.Size = new Size(90, 23);
-            bttnDisconnect.TabIndex = 6;
-            bttnDisconnect.Text = "Desconectar";
-            bttnDisconnect.UseVisualStyleBackColor = true;
-            bttnDisconnect.Click += bttnDisconnect_Click;
+
             //
             // lblDeviceName
             //
@@ -243,7 +234,6 @@ namespace RobotClient
         private Button                     bttnCalibrate;
         private TextBox                    tbDeviceName;
         private Button                     bttnConnect;
-        private Button                     bttnDisconnect;
         private Label                      lblDeviceName;
         private StatusStrip                statusStrip1;
         private ToolStripStatusLabel       statusLabelPrefix;

@@ -136,9 +136,6 @@ namespace RobotClient
         private void bttnCalibrate_Click(object sender, EventArgs e) =>
             _adapter.Calibrate();
 
-        private void bttnDisconnect_Click(object sender, EventArgs e) =>
-            _adapter.Disconnect();
-
         private void bttnStop_Click(object sender, EventArgs e)
         {
             _gcodeCts?.Cancel();
