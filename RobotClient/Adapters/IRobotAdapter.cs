@@ -14,6 +14,12 @@ namespace RobotClient
         void GoFinal(double[] qf);
 
         /// <summary>
+        /// Stops any active motion command or trajectory. Does not affect encoder
+        /// reading and does not disconnect from the robot.
+        /// </summary>
+        void Stop();
+
+        /// <summary>
         /// Returns the last computed external-torque estimate {τ_e1, τ_e2, τ_e3} (N-m).
         /// Returns zeros if no estimator is running.
         /// </summary>

@@ -12,6 +12,7 @@ namespace RobotClient
             destinationControl  = new GeomagicDestinationControl();
             configControl       = new GeomagicConfigControl();
             plotsControl        = new GeomagicPlotsControl();
+            bttnStop            = new Button();
             panel1              = new Panel();
             bttnCalibrate       = new Button();
             tbDeviceName        = new TextBox();
@@ -55,9 +56,20 @@ namespace RobotClient
             destinationControl.Size = new Size(159, 368);
             destinationControl.TabIndex = 16;
             //
+            // bttnStop
+            //
+            bttnStop.BackColor = Color.FromArgb(255, 220, 220);
+            bttnStop.Location = new Point(8, 450);
+            bttnStop.Name = "bttnStop";
+            bttnStop.Size = new Size(519, 28);
+            bttnStop.TabIndex = 19;
+            bttnStop.Text = "Detener";
+            bttnStop.UseVisualStyleBackColor = false;
+            bttnStop.Click += bttnStop_Click;
+            //
             // configControl
             //
-            configControl.Location = new Point(8, 450);
+            configControl.Location = new Point(8, 484);
             configControl.Name = "configControl";
             configControl.Size = new Size(519, 303);
             configControl.TabIndex = 18;
@@ -205,13 +217,14 @@ namespace RobotClient
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(plotsControl);
             Controls.Add(configControl);
+            Controls.Add(bttnStop);
             Controls.Add(destinationControl);
             Controls.Add(homeControl);
             Controls.Add(encodersControl);
             Controls.Add(panel1);
             Controls.Add(statusStrip1);
             Name = "GeomagicControl";
-            Size = new Size(1347, 782);
+            Size = new Size(1347, 816);
             configControl.ResumeLayout(false);
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
@@ -243,5 +256,6 @@ namespace RobotClient
         private ToolStripStatusLabel       robotStateLabelValue;
         private ToolStripStatusLabel       timeSeparator;
         private ToolStripStatusLabel       timeLabelValue;
+        private Button                     bttnStop;
     }
 }

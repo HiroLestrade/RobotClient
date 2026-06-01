@@ -139,6 +139,17 @@ namespace RobotClient
         private void bttnDisconnect_Click(object sender, EventArgs e) =>
             _adapter.Disconnect();
 
+        private void bttnStop_Click(object sender, EventArgs e)
+        {
+            _gcodeCts?.Cancel();
+            _adapter.Stop();
+            _showElapsed                   = false;
+            _interpreterRunning            = false;
+            plotsControl.StopRecording();
+            robotStateLabelValue.Text      = "Detenido";
+            robotStateLabelValue.ForeColor = Color.Gray;
+        }
+
         private async void OnExecuteGCodeRequested(object? sender, string code)
         {
             _gcodeCts?.Cancel();

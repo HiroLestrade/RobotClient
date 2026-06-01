@@ -180,6 +180,15 @@ namespace RobotClient
                 null, (int)(tf * 1000), Timeout.Infinite);
         }
 
+        public void Stop()
+        {
+            if (_controller == null) return;
+            ++_motionGeneration;
+            _recordingDesired = false;
+            _motionTimer?.Dispose(); _motionTimer = null;
+            _controller.Stop();
+        }
+
         public void Dispose() => Disconnect();
 
         private bool CheckReady(string action)

@@ -176,6 +176,12 @@ namespace RobotClient
 
         // ── IDisposable ──────────────────────────────────────────────────────────
 
+        public void Stop()
+        {
+            _motionTimer?.Dispose(); _motionTimer = null;
+            _controller?.Stop();
+        }
+
         public void Dispose() => Disconnect();
 
         public double[] GetLastEstimate() => new double[3];
