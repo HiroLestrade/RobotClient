@@ -272,6 +272,7 @@ namespace RobotClient
             txtGCode.ScrollBars = ScrollBars.Vertical;
             txtGCode.Size = new Size(499, 220);
             txtGCode.TabIndex = 0;
+            txtGCode.Text = "G0 A0 B15 C-80\r\nG4 P1000\r\nG0 A0 B20 C-120\r\nG4 P1000\r\nG1 X10 Y0 Z0\r\nG4 P1000\r\nG1 X20 Y0 Z0\r\nG4 P1000";
             //
             // btnExecuteGCode
             //
