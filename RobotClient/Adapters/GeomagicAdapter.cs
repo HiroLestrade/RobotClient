@@ -13,6 +13,7 @@ namespace RobotClient
         private GeomagicJointController?   _controller;
         private GeomagicPIDController?     _pid;
         private GeomagicPolyTrajectory?    _polyTraj;
+        private GeomagicMpcTrajectory?     _mpcTraj;
         private GeomagicDirectEstimation?  _estimator;
         private System.Threading.Timer?    _encoderTimer;
         private volatile bool              _encoderPending;
@@ -58,9 +59,10 @@ namespace RobotClient
                 GeomagicDevice.StartScheduler();
                 _pid        = new GeomagicPIDController();
                 _polyTraj   = new GeomagicPolyTrajectory();
+                _mpcTraj    = new GeomagicMpcTrajectory();
                 _controller = new GeomagicJointController(_device.NativeHandle);
                 _controller.SetController(_pid.NativeHandle);
-                _controller.SetTrajectory(_polyTraj.NativeHandle);
+                SetActiveTrajectory();
                 _host.SetConnectionStatus(true);
             }
             catch (Exception ex)
@@ -160,6 +162,7 @@ namespace RobotClient
 
             _pid!.SetGains(_config.GetKp(), _config.GetKi(), _config.GetKd());
             _controller!.SetController(_pid.NativeHandle);
+            SetActiveTrajectory();
 
             int gen = ++_motionGeneration;
             double tf = _config.TrajectoryTimeSecs;
@@ -221,7 +224,7 @@ namespace RobotClient
                     double[] p = GeomagicModel.ForwardKinematics(q);
                     _host.UpdateEncoderDisplay(q, p);
 
-                    if (_recordingDesired && _controller != null && _polyTraj != null)
+                    if (_recordingDesired && _controller != null)
                     {
                         double tStart = _controller.MotionStartTime;
                         if (tStart > 0)
@@ -229,7 +232,8 @@ namespace RobotClient
                             double t = (timeGetTime() - tStart) / 1000.0;
                             if (t >= 0 && t <= _desiredTf)
                             {
-                                _polyTraj.Evaluate(t, out double[] qd, out double[] qpd, out double[] qppd);
+                                EvaluateActiveTrajectory(t,
+                                    out double[] qd, out double[] qpd, out double[] qppd);
                                 _host.RecordDesiredTrajectory(t, qd, qpd, qppd);
                             }
                         }
@@ -247,6 +251,24 @@ namespace RobotClient
             _encoderTimer?.Dispose(); _encoderTimer = null;
             _encoderPending = false;
             _host.SetEncoderButtonText("Leer encoders");
+        }
+
+        private void SetActiveTrajectory()
+        {
+            if (_controller == null) return;
+            if (_config.SelectedTrajectory == "Trayectoria MPC")
+                _controller.SetTrajectory(_mpcTraj!.NativeHandle);
+            else
+                _controller.SetTrajectory(_polyTraj!.NativeHandle);
+        }
+
+        private void EvaluateActiveTrajectory(double t,
+            out double[] qd, out double[] qpd, out double[] qppd)
+        {
+            if (_config.SelectedTrajectory == "Trayectoria MPC" && _mpcTraj != null)
+                _mpcTraj.Evaluate(t, out qd, out qpd, out qppd);
+            else
+                _polyTraj!.Evaluate(t, out qd, out qpd, out qppd);
         }
 
         public double[] GetLastEstimate()
@@ -319,6 +341,7 @@ namespace RobotClient
             _controller?.Dispose();  _controller  = null;
             _pid?.Dispose();         _pid         = null;
             _polyTraj?.Dispose();    _polyTraj    = null;
+            _mpcTraj?.Dispose();     _mpcTraj     = null;
             _estimator?.Dispose();   _estimator   = null;
         }
     }

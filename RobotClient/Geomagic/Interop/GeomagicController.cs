@@ -217,4 +217,48 @@ namespace RobotClient
             GeomagicPolyTrajectory_Evaluate(_handle, t, qd, qpd, qppd);
         }
     }
+
+    internal sealed class GeomagicMpcTrajectory : IDisposable
+    {
+        [DllImport("GeomagicCore.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern IntPtr GeomagicMpcTrajectory_Create();
+
+        [DllImport("GeomagicCore.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern void GeomagicMpcTrajectory_Destroy(IntPtr traj);
+
+        [DllImport("GeomagicCore.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern void GeomagicMpcTrajectory_Evaluate(IntPtr traj, double t,
+            [Out] double[] qd, [Out] double[] qpd, [Out] double[] qppd);
+
+        private IntPtr _handle;
+        private bool _disposed;
+
+        internal IntPtr NativeHandle => _handle;
+
+        public GeomagicMpcTrajectory()
+        {
+            _handle = GeomagicMpcTrajectory_Create();
+            if (_handle == IntPtr.Zero)
+                throw new InvalidOperationException("GeomagicMpcTrajectory_Create returned null.");
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed && _handle != IntPtr.Zero)
+            {
+                GeomagicMpcTrajectory_Destroy(_handle);
+                _handle = IntPtr.Zero;
+                _disposed = true;
+            }
+        }
+
+        public void Evaluate(double t, out double[] qd, out double[] qpd, out double[] qppd)
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            qd   = new double[3];
+            qpd  = new double[3];
+            qppd = new double[3];
+            GeomagicMpcTrajectory_Evaluate(_handle, t, qd, qpd, qppd);
+        }
+    }
 }

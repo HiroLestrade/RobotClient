@@ -124,7 +124,7 @@ namespace RobotClient
             // cmbTrajectory
             //
             cmbTrajectory.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbTrajectory.Items.AddRange(new object[] { "Polinomio de 5° grado" });
+            cmbTrajectory.Items.AddRange(new object[] { "Polinomio de 5° grado", "Trayectoria MPC" });
             cmbTrajectory.Location = new Point(12, 36);
             cmbTrajectory.Name = "cmbTrajectory";
             cmbTrajectory.Size = new Size(200, 23);
