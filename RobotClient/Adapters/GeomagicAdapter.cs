@@ -256,61 +256,11 @@ namespace RobotClient
             catch { return new double[3]; }
         }
 
-        public double[] GetJointTorquesFromForce(double[] F)
+        public double[] GetEstimatedForce()
         {
-            if (_device == null) return new double[3];
-            double[] q  = _device.GetJointAngles();
-            double[] Jm = GeomagicModel.GetJacobian(q);
-            return
-            [
-                Jm[0]*F[0] + Jm[3]*F[1] + Jm[6]*F[2],
-                Jm[1]*F[0] + Jm[4]*F[1] + Jm[7]*F[2],
-                Jm[2]*F[0] + Jm[5]*F[1] + Jm[8]*F[2],
-            ];
-        }
-
-        public double[] GetCartesianForceEstimate()
-        {
-            if (_controller == null || _device == null) return new double[3];
-            try
-            {
-                double[] tauE = _controller.GetLastEstimate();
-                double[] q    = _device.GetJointAngles();
-                double[] Jm   = GeomagicModel.GetJacobian(q);
-                return SolveJTranspose(Jm, tauE) ?? new double[3];
-            }
+            if (_estimator == null) return new double[3];
+            try   { return _estimator.GetForce(); }
             catch { return new double[3]; }
-        }
-
-        private static double[]? SolveJTranspose(double[] Jm, double[] b)
-        {
-            double a00 = Jm[0], a01 = Jm[3], a02 = Jm[6];
-            double a10 = Jm[1], a11 = Jm[4], a12 = Jm[7];
-            double a20 = Jm[2], a21 = Jm[5], a22 = Jm[8];
-
-            double det = a00 * (a11 * a22 - a12 * a21)
-                       - a01 * (a10 * a22 - a12 * a20)
-                       + a02 * (a10 * a21 - a11 * a20);
-
-            if (Math.Abs(det) < 1e-10) return null;
-
-            double invDet = 1.0 / det;
-            double c00 =  (a11 * a22 - a12 * a21);
-            double c10 = -(a01 * a22 - a02 * a21);
-            double c20 =  (a01 * a12 - a02 * a11);
-            double c01 = -(a10 * a22 - a12 * a20);
-            double c11 =  (a00 * a22 - a02 * a20);
-            double c21 = -(a00 * a12 - a02 * a10);
-            double c02 =  (a10 * a21 - a11 * a20);
-            double c12 = -(a00 * a21 - a01 * a20);
-            double c22 =  (a00 * a11 - a01 * a10);
-
-            return
-            [
-                invDet * (c00 * b[0] + c10 * b[1] + c20 * b[2]),
-                invDet * (c01 * b[0] + c11 * b[1] + c21 * b[2]),
-                invDet * (c02 * b[0] + c12 * b[1] + c22 * b[2]),
-            ];
         }
 
         private void DisposeController()

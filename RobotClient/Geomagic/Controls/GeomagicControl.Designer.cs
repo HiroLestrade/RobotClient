@@ -28,6 +28,9 @@ namespace RobotClient
             robotStateSeparator    = new ToolStripStatusLabel();
             robotStateLabelPrefix  = new ToolStripStatusLabel();
             robotStateLabelValue   = new ToolStripStatusLabel();
+            forceStatusSeparator   = new ToolStripStatusLabel();
+            forceStatusLabelPrefix = new ToolStripStatusLabel();
+            forceStatusLabelValue  = new ToolStripStatusLabel();
             timeSeparator       = new ToolStripStatusLabel();
             timeLabelValue      = new ToolStripStatusLabel();
             configControl.SuspendLayout();
@@ -136,7 +139,7 @@ namespace RobotClient
             // statusStrip1
             //
             statusStrip1.Dock = DockStyle.Bottom;
-            statusStrip1.Items.AddRange(new ToolStripItem[] { statusLabelPrefix, statusLabelValue, statusSeparator, calibrationLabelPrefix, calibrationLabelValue, robotStateSeparator, robotStateLabelPrefix, robotStateLabelValue, timeSeparator, timeLabelValue });
+            statusStrip1.Items.AddRange(new ToolStripItem[] { statusLabelPrefix, statusLabelValue, statusSeparator, calibrationLabelPrefix, calibrationLabelValue, robotStateSeparator, robotStateLabelPrefix, robotStateLabelValue, forceStatusSeparator, forceStatusLabelPrefix, forceStatusLabelValue, timeSeparator, timeLabelValue });
             statusStrip1.Name = "statusStrip1";
             statusStrip1.Size = new Size(1347, 22);
             statusStrip1.TabIndex = 0;
@@ -191,6 +194,25 @@ namespace RobotClient
             robotStateLabelValue.Size = new Size(55, 17);
             robotStateLabelValue.Text = "Detenido";
             //
+            // forceStatusSeparator
+            //
+            forceStatusSeparator.Name = "forceStatusSeparator";
+            forceStatusSeparator.Size = new Size(28, 17);
+            forceStatusSeparator.Text = "   |   ";
+            //
+            // forceStatusLabelPrefix
+            //
+            forceStatusLabelPrefix.Name = "forceStatusLabelPrefix";
+            forceStatusLabelPrefix.Size = new Size(114, 17);
+            forceStatusLabelPrefix.Text = "Sensor de fuerza: ";
+            //
+            // forceStatusLabelValue
+            //
+            forceStatusLabelValue.ForeColor = Color.Red;
+            forceStatusLabelValue.Name = "forceStatusLabelValue";
+            forceStatusLabelValue.Size = new Size(82, 17);
+            forceStatusLabelValue.Text = "Desconectado";
+            //
             // timeSeparator
             //
             timeSeparator.Name = "timeSeparator";
@@ -244,6 +266,9 @@ namespace RobotClient
         private ToolStripStatusLabel       robotStateSeparator;
         private ToolStripStatusLabel       robotStateLabelPrefix;
         private ToolStripStatusLabel       robotStateLabelValue;
+        private ToolStripStatusLabel       forceStatusSeparator;
+        private ToolStripStatusLabel       forceStatusLabelPrefix;
+        private ToolStripStatusLabel       forceStatusLabelValue;
         private ToolStripStatusLabel       timeSeparator;
         private ToolStripStatusLabel       timeLabelValue;
         private Button                     bttnStop;

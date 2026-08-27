@@ -66,6 +66,12 @@ namespace RobotClient
             ConfigureChart(chartX,    "x [cm]");
             ConfigureChart(chartY,    "y [cm]");
             ConfigureChart(chartZ,    "z [cm]");
+            ConfigureChart(chartFx,   "F0x [N]", -3, 3);
+            ConfigureChart(chartFy,   "F0y [N]", -3, 3);
+            ConfigureChart(chartFz,   "F0z [N]", -3, 3);
+            ConfigureChart(chartErrFx, "Error Fx [N]", -3, 3);
+            ConfigureChart(chartErrFy, "Error Fy [N]", -3, 3);
+            ConfigureChart(chartErrFz, "Error Fz [N]", -3, 3);
 
             foreach (var ch in AllCharts())
             {
@@ -99,7 +105,8 @@ namespace RobotClient
 
         // ── Measured samples ─────────────────────────────────────────────────────
 
-        public void RecordSample(double[] q, double[] p)
+        public void RecordSample(double[] q, double[] p, double[]? force = null,
+                                 double[]? estimatedForce = null)
         {
             if (!_isRecording) return;
 
@@ -120,6 +127,31 @@ namespace RobotClient
             Add(chartY,  0, t, ycm);
             Add(chartZ,  0, t, zcm);
             Invalidate(chartQ1, chartQ2, chartQ3, chartX, chartY, chartZ);
+
+            if (force != null)
+            {
+                Add(chartFx, 0, t, force[0]);
+                Add(chartFy, 0, t, force[1]);
+                Add(chartFz, 0, t, force[2]);
+                Invalidate(chartFx, chartFy, chartFz);
+            }
+
+            if (estimatedForce != null)
+            {
+                Add(chartFx, 1, t, estimatedForce[0]);
+                Add(chartFy, 1, t, estimatedForce[1]);
+                Add(chartFz, 1, t, estimatedForce[2]);
+                Invalidate(chartFx, chartFy, chartFz);
+            }
+
+            // Estimation error: Fe (estimated) - Fs (sensor), in N.
+            if (force != null && estimatedForce != null)
+            {
+                Add(chartErrFx, 0, t, estimatedForce[0] - force[0]);
+                Add(chartErrFy, 0, t, estimatedForce[1] - force[1]);
+                Add(chartErrFz, 0, t, estimatedForce[2] - force[2]);
+                Invalidate(chartErrFx, chartErrFy, chartErrFz);
+            }
 
             if (!double.IsNaN(_prevT) && dt >= MinDt)
             {
@@ -287,7 +319,9 @@ namespace RobotClient
             [chartQ1, chartQ2, chartQ3,
              chartDQ1, chartDQ2, chartDQ3,
              chartDDQ1, chartDDQ2, chartDDQ3,
-             chartX, chartY, chartZ];
+             chartX, chartY, chartZ,
+             chartFx, chartFy, chartFz,
+             chartErrFx, chartErrFy, chartErrFz];
 
         private void ClearAllChartData()
         {
@@ -319,7 +353,8 @@ namespace RobotClient
             new string(name.Select(c => char.IsLetterOrDigit(c) ? c : '_').ToArray())
                 .Trim('_');
 
-        private static void ConfigureChart(OxyPlot.WindowsForms.PlotView chart, string yLabel)
+        private static void ConfigureChart(OxyPlot.WindowsForms.PlotView chart, string yLabel,
+                                           double? yMin = null, double? yMax = null)
         {
             var model = new OxyPlot.PlotModel();
             model.Axes.Add(new OxyPlot.Axes.LinearAxis
@@ -335,6 +370,8 @@ namespace RobotClient
                 Title              = yLabel,
                 MajorGridlineStyle = OxyPlot.LineStyle.Solid,
                 MajorGridlineColor = OxyPlot.OxyColors.LightGray,
+                Minimum            = yMin ?? double.NaN,
+                Maximum            = yMax ?? double.NaN,
             });
             model.Series.Add(new OxyPlot.Series.LineSeries
             {

@@ -39,6 +39,11 @@ namespace RobotClient
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int SampleTimeMs => pidGainsControl.SampleTimeMs;
 
+        // ── Force sensor ─────────────────────────────────────────────────────────
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public ForceSensorControl ForceSensor => forceSensorControl;
+
         public double[] GetKp() => pidGainsControl.GetKp();
         public double[] GetKi() => pidGainsControl.GetKi();
         public double[] GetKd() => pidGainsControl.GetKd();

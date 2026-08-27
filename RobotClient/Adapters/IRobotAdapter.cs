@@ -24,5 +24,11 @@ namespace RobotClient
         /// Returns zeros if no estimator is running.
         /// </summary>
         double[] GetLastEstimate();
+
+        /// <summary>
+        /// Returns the last estimated Cartesian force {Fx, Fy, Fz} (N), expressed
+        /// in the robot base frame. Returns zeros if no estimator is running.
+        /// </summary>
+        double[] GetEstimatedForce();
     }
 }

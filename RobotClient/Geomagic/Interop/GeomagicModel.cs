@@ -19,6 +19,11 @@ namespace RobotClient
             [In]  double[] q,
             [Out] double[] Jm);
 
+        [DllImport("GeomagicCore.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern void GeomagicModel_GetRotation(
+            [In]  double[] q,
+            [Out] double[] R);
+
         /// <summary>
         /// Forward kinematics: q[3] (rad) -> Cartesian position p[3] (m).
         /// </summary>
@@ -48,6 +53,18 @@ namespace RobotClient
             double[] Jm = new double[9];
             GeomagicModel_GetJacobian(q, Jm);
             return Jm;
+        }
+
+        /// <summary>
+        /// Returns the 3×3 rotation matrix R30(q) from the base frame (0) to the
+        /// end-effector frame, stored row-major in a flat double[9]: element
+        /// [i,j] = R[i*3+j].
+        /// </summary>
+        public static double[] GetRotation(double[] q)
+        {
+            double[] R = new double[9];
+            GeomagicModel_GetRotation(q, R);
+            return R;
         }
     }
 }

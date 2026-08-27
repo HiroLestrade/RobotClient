@@ -40,6 +40,16 @@ namespace RobotClient
             chartX         = new PlotView();
             chartY         = new PlotView();
             chartZ         = new PlotView();
+            tabPageForce   = new TabPage();
+            tlpFuerza      = new TableLayoutPanel();
+            chartFx        = new PlotView();
+            chartFy        = new PlotView();
+            chartFz        = new PlotView();
+            tabPageError   = new TabPage();
+            tlpError       = new TableLayoutPanel();
+            chartErrFx     = new PlotView();
+            chartErrFy     = new PlotView();
+            chartErrFz     = new PlotView();
             pnlButtons.SuspendLayout();
             tabPlots.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -50,6 +60,10 @@ namespace RobotClient
             tlpAceleracion.SuspendLayout();
             tabPage3.SuspendLayout();
             tlpCartesiano.SuspendLayout();
+            tabPageForce.SuspendLayout();
+            tlpFuerza.SuspendLayout();
+            tabPageError.SuspendLayout();
+            tlpError.SuspendLayout();
             SuspendLayout();
             //
             // tabPlots
@@ -58,6 +72,8 @@ namespace RobotClient
             tabPlots.Controls.Add(tabPageVel);
             tabPlots.Controls.Add(tabPageAcc);
             tabPlots.Controls.Add(tabPage3);
+            tabPlots.Controls.Add(tabPageForce);
+            tabPlots.Controls.Add(tabPageError);
             tabPlots.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right;
             tabPlots.Location = new Point(0, 0);
             tabPlots.Name = "tabPlots";
@@ -297,6 +313,122 @@ namespace RobotClient
             chartZ.ZoomRectangleCursor = Cursors.SizeNWSE;
             chartZ.ZoomVerticalCursor = Cursors.SizeNS;
             //
+            // tabPageForce — Fuerza
+            //
+            tabPageForce.Controls.Add(tlpFuerza);
+            tabPageForce.Location = new Point(4, 24);
+            tabPageForce.Name = "tabPageForce";
+            tabPageForce.Padding = new Padding(3);
+            tabPageForce.Size = new Size(777, 650);
+            tabPageForce.TabIndex = 4;
+            tabPageForce.Text = "Fuerza";
+            tabPageForce.UseVisualStyleBackColor = true;
+            //
+            // tlpFuerza
+            //
+            tlpFuerza.ColumnCount = 1;
+            tlpFuerza.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tlpFuerza.Controls.Add(chartFx, 0, 0);
+            tlpFuerza.Controls.Add(chartFy, 0, 1);
+            tlpFuerza.Controls.Add(chartFz, 0, 2);
+            tlpFuerza.Dock = DockStyle.Fill;
+            tlpFuerza.Location = new Point(3, 3);
+            tlpFuerza.Name = "tlpFuerza";
+            tlpFuerza.RowCount = 3;
+            tlpFuerza.RowStyles.Add(new RowStyle(SizeType.Percent, 33.33F));
+            tlpFuerza.RowStyles.Add(new RowStyle(SizeType.Percent, 33.33F));
+            tlpFuerza.RowStyles.Add(new RowStyle(SizeType.Percent, 33.34F));
+            tlpFuerza.Size = new Size(771, 644);
+            tlpFuerza.TabIndex = 0;
+            //
+            // chartFx
+            //
+            chartFx.Dock = DockStyle.Fill;
+            chartFx.Name = "chartFx";
+            chartFx.PanCursor = Cursors.Hand;
+            chartFx.TabIndex = 0;
+            chartFx.ZoomHorizontalCursor = Cursors.SizeWE;
+            chartFx.ZoomRectangleCursor = Cursors.SizeNWSE;
+            chartFx.ZoomVerticalCursor = Cursors.SizeNS;
+            //
+            // chartFy
+            //
+            chartFy.Dock = DockStyle.Fill;
+            chartFy.Name = "chartFy";
+            chartFy.PanCursor = Cursors.Hand;
+            chartFy.TabIndex = 1;
+            chartFy.ZoomHorizontalCursor = Cursors.SizeWE;
+            chartFy.ZoomRectangleCursor = Cursors.SizeNWSE;
+            chartFy.ZoomVerticalCursor = Cursors.SizeNS;
+            //
+            // chartFz
+            //
+            chartFz.Dock = DockStyle.Fill;
+            chartFz.Name = "chartFz";
+            chartFz.PanCursor = Cursors.Hand;
+            chartFz.TabIndex = 2;
+            chartFz.ZoomHorizontalCursor = Cursors.SizeWE;
+            chartFz.ZoomRectangleCursor = Cursors.SizeNWSE;
+            chartFz.ZoomVerticalCursor = Cursors.SizeNS;
+            //
+            // tabPageError — Error de estimación
+            //
+            tabPageError.Controls.Add(tlpError);
+            tabPageError.Location = new Point(4, 24);
+            tabPageError.Name = "tabPageError";
+            tabPageError.Padding = new Padding(3);
+            tabPageError.Size = new Size(777, 650);
+            tabPageError.TabIndex = 5;
+            tabPageError.Text = "Error de estimación";
+            tabPageError.UseVisualStyleBackColor = true;
+            //
+            // tlpError
+            //
+            tlpError.ColumnCount = 1;
+            tlpError.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tlpError.Controls.Add(chartErrFx, 0, 0);
+            tlpError.Controls.Add(chartErrFy, 0, 1);
+            tlpError.Controls.Add(chartErrFz, 0, 2);
+            tlpError.Dock = DockStyle.Fill;
+            tlpError.Location = new Point(3, 3);
+            tlpError.Name = "tlpError";
+            tlpError.RowCount = 3;
+            tlpError.RowStyles.Add(new RowStyle(SizeType.Percent, 33.33F));
+            tlpError.RowStyles.Add(new RowStyle(SizeType.Percent, 33.33F));
+            tlpError.RowStyles.Add(new RowStyle(SizeType.Percent, 33.34F));
+            tlpError.Size = new Size(771, 644);
+            tlpError.TabIndex = 0;
+            //
+            // chartErrFx
+            //
+            chartErrFx.Dock = DockStyle.Fill;
+            chartErrFx.Name = "chartErrFx";
+            chartErrFx.PanCursor = Cursors.Hand;
+            chartErrFx.TabIndex = 0;
+            chartErrFx.ZoomHorizontalCursor = Cursors.SizeWE;
+            chartErrFx.ZoomRectangleCursor = Cursors.SizeNWSE;
+            chartErrFx.ZoomVerticalCursor = Cursors.SizeNS;
+            //
+            // chartErrFy
+            //
+            chartErrFy.Dock = DockStyle.Fill;
+            chartErrFy.Name = "chartErrFy";
+            chartErrFy.PanCursor = Cursors.Hand;
+            chartErrFy.TabIndex = 1;
+            chartErrFy.ZoomHorizontalCursor = Cursors.SizeWE;
+            chartErrFy.ZoomRectangleCursor = Cursors.SizeNWSE;
+            chartErrFy.ZoomVerticalCursor = Cursors.SizeNS;
+            //
+            // chartErrFz
+            //
+            chartErrFz.Dock = DockStyle.Fill;
+            chartErrFz.Name = "chartErrFz";
+            chartErrFz.PanCursor = Cursors.Hand;
+            chartErrFz.TabIndex = 2;
+            chartErrFz.ZoomHorizontalCursor = Cursors.SizeWE;
+            chartErrFz.ZoomRectangleCursor = Cursors.SizeNWSE;
+            chartErrFz.ZoomVerticalCursor = Cursors.SizeNS;
+            //
             // pnlButtons  (TableLayoutPanel — 2 columnas iguales)
             //
             pnlButtons.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -348,6 +480,10 @@ namespace RobotClient
             tlpAceleracion.ResumeLayout(false);
             tabPage3.ResumeLayout(false);
             tlpCartesiano.ResumeLayout(false);
+            tabPageForce.ResumeLayout(false);
+            tlpFuerza.ResumeLayout(false);
+            tabPageError.ResumeLayout(false);
+            tlpError.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -359,10 +495,14 @@ namespace RobotClient
         private TabPage tabPageVel;
         private TabPage tabPageAcc;
         private TabPage tabPage3;
+        private TabPage tabPageForce;
+        private TabPage tabPageError;
         private TableLayoutPanel tlpArticular;
         private TableLayoutPanel tlpVelocidad;
         private TableLayoutPanel tlpAceleracion;
         private TableLayoutPanel tlpCartesiano;
+        private TableLayoutPanel tlpFuerza;
+        private TableLayoutPanel tlpError;
         private PlotView chartQ1;
         private PlotView chartQ2;
         private PlotView chartQ3;
@@ -375,5 +515,11 @@ namespace RobotClient
         private PlotView chartX;
         private PlotView chartY;
         private PlotView chartZ;
+        private PlotView chartFx;
+        private PlotView chartFy;
+        private PlotView chartFz;
+        private PlotView chartErrFx;
+        private PlotView chartErrFy;
+        private PlotView chartErrFz;
     }
 }

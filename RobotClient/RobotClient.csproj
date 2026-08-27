@@ -29,4 +29,9 @@
     <Copy SourceFiles="$(MSBuildProjectDirectory)\..\..\ViperCore\ViperCore\dxl_x86_c.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" ContinueOnError="true" />
   </Target>
 
+  <!-- Copy ATIForceSensor.dll from its C++ build output next to the exe after build. -->
+  <Target Name="CopyATIForceSensorDll" AfterTargets="Build">
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\..\..\ATIForceSensor\$(Configuration)\ATIForceSensor.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" ContinueOnError="true" />
+  </Target>
+
 </Project>

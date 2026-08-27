@@ -186,6 +186,8 @@ namespace RobotClient
 
         public double[] GetLastEstimate() => new double[3];
 
+        public double[] GetEstimatedForce() => new double[3];
+
         // ── Helpers ──────────────────────────────────────────────────────────────
 
         private void StartMotionTimer(string completedState)

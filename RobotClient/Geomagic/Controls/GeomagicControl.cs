@@ -27,6 +27,11 @@ namespace RobotClient
             homeControl.GoHomeRequested         += (_, qf) => _adapter.GoHome(qf);
             destinationControl.GoFinalRequested += (_, qf) => _adapter.GoFinal(qf);
             configControl.ExecuteGCodeRequested += OnExecuteGCodeRequested;
+            configControl.ForceSensor.ConnectionChanged += (_, connected) =>
+            {
+                forceStatusLabelValue.Text      = connected ? "Conectado"   : "Desconectado";
+                forceStatusLabelValue.ForeColor = connected ? Color.Green   : Color.Red;
+            };
 
             _elapsedTimer = new System.Windows.Forms.Timer { Interval = 50 };
             _elapsedTimer.Tick += (_, _) =>
@@ -113,7 +118,17 @@ namespace RobotClient
                 p[0] * 100.0,
                 p[1] * 100.0,
                 p[2] * 100.0);
-            plotsControl.RecordSample(q, p);
+
+            // Read at the same sample tick as q/p so force shares the motion's time base,
+            // whether the motion came from "Ir a Destino" or the G-code interpreter.
+            // F0 = R30(q) · Rs · Fs — conditioned and expressed in the base frame.
+            double[]? rawForce = configControl.ForceSensor.TryRead();
+            double[]? force = rawForce != null ? ForceSensorFrame.ToBaseFrame(q, rawForce) : null;
+
+            // Model-based estimate (also base frame), for comparison against the sensor.
+            double[] estimatedForce = _adapter.GetEstimatedForce();
+
+            plotsControl.RecordSample(q, p, force, estimatedForce);
         }
 
         void IRobotHost.SetEncoderButtonText(string text) =>

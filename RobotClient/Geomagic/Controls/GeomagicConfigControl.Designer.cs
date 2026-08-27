@@ -40,10 +40,13 @@ namespace RobotClient
             tabPageInterpreter  = new TabPage();
             txtGCode            = new TextBox();
             btnExecuteGCode     = new Button();
+            tabPageForceSensor  = new TabPage();
+            forceSensorControl  = new ForceSensorControl();
             tabConfig.SuspendLayout();
             tabPageControl.SuspendLayout();
             tabPageTrajectory.SuspendLayout();
             tabPageEndEffector.SuspendLayout();
+            tabPageForceSensor.SuspendLayout();
             SuspendLayout();
             //
             // tabConfig
@@ -52,6 +55,7 @@ namespace RobotClient
             tabConfig.Controls.Add(tabPageTrajectory);
             tabConfig.Controls.Add(tabPageEndEffector);
             tabConfig.Controls.Add(tabPageInterpreter);
+            tabConfig.Controls.Add(tabPageForceSensor);
             tabConfig.Dock = DockStyle.Fill;
             tabConfig.Location = new Point(0, 0);
             tabConfig.Name = "tabConfig";
@@ -284,6 +288,25 @@ namespace RobotClient
             btnExecuteGCode.UseVisualStyleBackColor = true;
             btnExecuteGCode.Click += btnExecuteGCode_Click;
             //
+            // tabPageForceSensor
+            //
+            tabPageForceSensor.Controls.Add(forceSensorControl);
+            tabPageForceSensor.Location = new Point(4, 24);
+            tabPageForceSensor.Name = "tabPageForceSensor";
+            tabPageForceSensor.Padding = new Padding(3);
+            tabPageForceSensor.Size = new Size(511, 275);
+            tabPageForceSensor.TabIndex = 4;
+            tabPageForceSensor.Text = "Sensor de Fuerza";
+            tabPageForceSensor.UseVisualStyleBackColor = true;
+            //
+            // forceSensorControl
+            //
+            forceSensorControl.Dock = DockStyle.Fill;
+            forceSensorControl.Location = new Point(3, 3);
+            forceSensorControl.Name = "forceSensorControl";
+            forceSensorControl.Size = new Size(505, 269);
+            forceSensorControl.TabIndex = 0;
+            //
             // GeomagicConfigControl
             //
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -298,6 +321,7 @@ namespace RobotClient
             tabPageTrajectory.PerformLayout();
             tabPageEndEffector.ResumeLayout(false);
             tabPageEndEffector.PerformLayout();
+            tabPageForceSensor.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -324,5 +348,7 @@ namespace RobotClient
         private TabPage         tabPageInterpreter;
         private TextBox         txtGCode;
         private Button          btnExecuteGCode;
+        private TabPage             tabPageForceSensor;
+        private ForceSensorControl  forceSensorControl;
     }
 }
