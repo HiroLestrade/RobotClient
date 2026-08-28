@@ -9,6 +9,9 @@
 bin/
 obj/
 
+# Local .NET install sentinels
+.dotnet/
+
 # Native DLLs copied at build time (GeomagicCore, OpenHaptics, etc.)
 *.dll
 *.pdb

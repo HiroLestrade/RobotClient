@@ -1,4 +1,4 @@
-namespace RobotClient
+namespace ForceEstimation
 {
     internal static class Program
     {
@@ -17,7 +17,7 @@ namespace RobotClient
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             ApplicationConfiguration.Initialize();
-            Application.Run(new MainMenuForm());
+            Application.Run(new ForceEstimationForm());
         }
     }
 }
