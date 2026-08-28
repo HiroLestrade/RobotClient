@@ -1,4 +1,5 @@
 using ForceEstimation;
+using Teleoperation;
 
 namespace RobotClient
 {
@@ -17,7 +18,7 @@ namespace RobotClient
             InitializeComponent();
 
             btnExperiment1.Click += (_, _) => OpenExperiment(new ForceEstimationForm());
-            btnExperiment2.Click += (_, _) => NotImplementedYet(btnExperiment2.Text);
+            btnExperiment2.Click += (_, _) => OpenExperiment(new TeleoperationForm());
             btnExperiment3.Click += (_, _) => NotImplementedYet(btnExperiment3.Text);
             btnExperiment4.Click += (_, _) => NotImplementedYet(btnExperiment4.Text);
             btnExperiment5.Click += (_, _) => NotImplementedYet(btnExperiment5.Text);

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- GeomagicCore.dll is a Win32 (x86) native DLL; the process must be 32-bit. -->
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
+  <!-- Copy GeomagicCore.dll from its C++ build output next to the exe after build,
+       so this experiment can also be run on its own. -->
+  <Target Name="CopyGeomagicCoreDll" AfterTargets="Build">
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\..\..\GeomagicCore\$(Configuration)\GeomagicCore.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" ContinueOnError="true" />
+  </Target>
+
+  <!-- Copy ATIForceSensor.dll from its C++ build output next to the exe after build. -->
+  <Target Name="CopyATIForceSensorDll" AfterTargets="Build">
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\..\..\ATIForceSensor\$(Configuration)\ATIForceSensor.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" ContinueOnError="true" />
+  </Target>
+
+</Project>

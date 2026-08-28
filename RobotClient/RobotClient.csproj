@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ForceEstimation\ForceEstimation.csproj" />
+    <ProjectReference Include="..\Teleoperation\Teleoperation.csproj" />
   </ItemGroup>
 
   <!--
