@@ -10,6 +10,10 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="OxyPlot.WindowsForms" Version="2.1.2" />
+  </ItemGroup>
+
   <!-- Copy GeomagicCore.dll from its C++ build output next to the exe after build,
        so this experiment can also be run on its own. -->
   <Target Name="CopyGeomagicCoreDll" AfterTargets="Build">

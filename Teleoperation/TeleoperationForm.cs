@@ -4,21 +4,19 @@ namespace Teleoperation
     /// Experiment 2 — bilateral teleoperation with two Geomagic Touch devices,
     /// running the position/force law of Guajardo, Section 3.1.
     ///
-    /// Both devices come up under the single shared HD scheduler; each then gets
-    /// its own estimator (3.35)-(3.43) and bilateral controller (3.1)/(3.2),
-    /// cross-linked so each reads the other's position and estimated torque at
-    /// the 2 ms control rate.
+    /// Both devices come up under the single shared HD scheduler; a single
+    /// <see cref="GeomagicBilateralLoop"/> then drives the pair, computing both
+    /// control laws (3.1)/(3.2) from one position snapshot and running both
+    /// estimators (3.35)-(3.43) afterwards, all on one 2 ms thread.
     /// </summary>
     public partial class TeleoperationForm : Form
     {
         private GeomagicDevice? _device1;
         private GeomagicDevice? _device2;
 
-        // Control stack of the bilateral law, one per robot. Robot 1 is the
-        // local side (3.1), robot 2 the remote one (3.2).
-        private GeomagicMomentumEstimator?   _estimator1, _estimator2;
-        private GeomagicBilateralController? _bilateral1, _bilateral2;
-        private GeomagicJointController?     _controller1, _controller2;
+        // One loop drives both robots. Robot 1 is the local side (3.1),
+        // robot 2 the remote one (3.2).
+        private GeomagicBilateralLoop? _loop;
         private bool _teleopRunning;
 
         // Largest joint mismatch tolerated when starting teleoperation, in rad.
@@ -98,59 +96,43 @@ namespace Teleoperation
         }
 
         /// <summary>
-        /// Builds one estimator + bilateral controller + joint controller per
-        /// robot and cross-links them: each controller reads q_di and tau_di
-        /// straight from the other robot's device and estimator, at the control
-        /// rate. The channel delay T_j(t) of (3.9) and (3.13) is therefore zero,
-        /// both robots being on this host.
+        /// Creates the single control loop over both devices and loads the gains.
+        /// The loop owns both controllers and both estimators and ticks them from
+        /// one thread, so the channel of (3.9)/(3.13) is broken by exactly one
+        /// sample. Its transport delay T_j(t) is zero — both robots are on this
+        /// host and the loop reads them from the same snapshot.
         /// </summary>
         private void BuildControlStack()
         {
-            _estimator1 = new GeomagicMomentumEstimator(isLocal: true);
-            _estimator2 = new GeomagicMomentumEstimator(isLocal: false);
-            _estimator1.SetGains(BilateralGains.EstimatorK, BilateralGains.EstimatorKu);
-            _estimator2.SetGains(BilateralGains.EstimatorK, BilateralGains.EstimatorKu);
-            _estimator1.SetDifferentiatorBounds(BilateralGains.DifferentiatorL,
-                                                BilateralGains.DifferentiatorM);
-            _estimator2.SetDifferentiatorBounds(BilateralGains.DifferentiatorL,
-                                                BilateralGains.DifferentiatorM);
+            _loop = new GeomagicBilateralLoop(_device1!.NativeHandle, _device2!.NativeHandle);
+            _loop.SetVelocitySource(BilateralGains.UseLevantVelocity
+                ? GeomagicBilateralLoop.VelocitySource.Levant
+                : GeomagicBilateralLoop.VelocitySource.Dirty);
+            _loop.SetDirtyLambda(BilateralGains.DirtyLambda);
+            _loop.SetVelocityFilter(BilateralGains.VelocityFilterOwn,
+                                    BilateralGains.VelocityFilterPeer);
 
-            _bilateral1 = new GeomagicBilateralController(isLocal: true);
-            _bilateral2 = new GeomagicBilateralController(isLocal: false);
-            ApplyGains(_bilateral1, BilateralGains.StartLocal);
-            ApplyGains(_bilateral2, BilateralGains.StartRemote);
-            _bilateral1.SetDifferentiatorBounds(BilateralGains.DifferentiatorL,
-                                                BilateralGains.DifferentiatorM);
-            _bilateral2.SetDifferentiatorBounds(BilateralGains.DifferentiatorL,
-                                                BilateralGains.DifferentiatorM);
+            ApplySideConfig(_loop.Local,  BilateralGains.StartLocal);
+            ApplySideConfig(_loop.Remote, BilateralGains.StartRemote);
 
-            _bilateral1.SetEstimator(_estimator1.NativeHandle);
-            _bilateral2.SetEstimator(_estimator2.NativeHandle);
-            _bilateral1.SetPeer(_device2!.NativeHandle, _estimator2.NativeHandle);
-            _bilateral2.SetPeer(_device1!.NativeHandle, _estimator1.NativeHandle);
-
-            _controller1 = new GeomagicJointController(_device1.NativeHandle);
-            _controller2 = new GeomagicJointController(_device2.NativeHandle);
-            _controller1.SetController(_bilateral1.NativeHandle);
-            _controller2.SetController(_bilateral2.NativeHandle);
-            _controller1.SetEstimator(_estimator1.NativeHandle);
-            _controller2.SetEstimator(_estimator2.NativeHandle);
+            plotsControl.ExportLog = path => _loop.ExportLog(path);
         }
 
-        private static void ApplyGains(GeomagicBilateralController ctrl, BilateralGainSet g) =>
-            ctrl.SetGains(g.Ka, g.Kp, g.Kf, g.Lambda, g.Kbeta, g.Kgamma);
+        private static void ApplySideConfig(GeomagicBilateralView side, BilateralGainSet g)
+        {
+            side.SetControlGains(g.Ka, g.Kp, g.Kf, g.Lambda, g.Kbeta, g.Kgamma);
+            side.SetForceChannelGain(BilateralGains.ForceChannelGain);
+            side.SetEstimatorGains(BilateralGains.EstimatorK, BilateralGains.EstimatorKu);
+            side.SetDifferentiatorBounds(BilateralGains.DifferentiatorL,
+                                         BilateralGains.DifferentiatorM);
+        }
 
         private void DisposeDevices()
         {
-            // Controllers first: they hold pointers into the devices and the
-            // estimators, and their timer thread must be stopped before either
-            // is freed.
-            _controller1?.Dispose(); _controller1 = null;
-            _controller2?.Dispose(); _controller2 = null;
-            _bilateral1?.Dispose();  _bilateral1  = null;
-            _bilateral2?.Dispose();  _bilateral2  = null;
-            _estimator1?.Dispose();  _estimator1  = null;
-            _estimator2?.Dispose();  _estimator2  = null;
+            // The loop first: its timer thread touches both devices, so it has to
+            // be stopped and freed before they are.
+            plotsControl.ExportLog = null;
+            _loop?.Dispose(); _loop = null;
 
             _device1?.Dispose(); _device1 = null;
             _device2?.Dispose(); _device2 = null;
@@ -209,6 +191,7 @@ namespace Teleoperation
             if (_reading) return;
 
             _reading = true;
+            plotsControl.Clear();
             bttnReadEncoders.Text = "Detener lectura";
             readingLabelValue.Text      = "Activa";
             readingLabelValue.ForeColor = Color.Green;
@@ -230,29 +213,40 @@ namespace Teleoperation
             readingLabelValue.ForeColor = Color.Gray;
         }
 
-        // Runs on the UI thread — both devices are read within the same tick.
+        // Runs on the UI thread — both devices are read within the same tick, so
+        // the two plot traces share a time base.
         private void EncTimer_Tick(object? sender, EventArgs e)
         {
-            UpdateEncoders(_device1, encoders1);
-            UpdateEncoders(_device2, encoders2);
+            double[]? qLocal  = UpdateEncoders(_device1, encoders1);
+            double[]? qRemote = UpdateEncoders(_device2, encoders2);
+
+            if (qLocal != null && qRemote != null)
+                plotsControl.AddSample(qLocal, qRemote);
         }
 
-        private static void UpdateEncoders(GeomagicDevice? device, GeomagicEncodersControl display)
+        /// <summary>
+        /// Refreshes one readout and returns that robot's joint angles in
+        /// degrees, or null if the device could not be read.
+        /// </summary>
+        private static double[]? UpdateEncoders(GeomagicDevice? device,
+                                                GeomagicEncodersControl display)
         {
-            if (device == null) return;
+            if (device == null) return null;
             try
             {
                 double[] q = device.GetJointAngles();
                 double[] p = GeomagicModel.ForwardKinematics(q);
-                display.UpdateDisplay(
+                double[] deg =
+                [
                     q[0] * 180.0 / Math.PI,
                     q[1] * 180.0 / Math.PI,
                     q[2] * 180.0 / Math.PI,
-                    p[0] * 100.0,
-                    p[1] * 100.0,
-                    p[2] * 100.0);
+                ];
+                display.UpdateDisplay(deg[0], deg[1], deg[2],
+                                      p[0] * 100.0, p[1] * 100.0, p[2] * 100.0);
+                return deg;
             }
-            catch { }
+            catch { return null; }
         }
 
         // ── Teleoperación ────────────────────────────────────────────────────────
@@ -269,7 +263,7 @@ namespace Teleoperation
 
         private void StartTeleop()
         {
-            if (_controller1 == null || _controller2 == null ||
+            if (_loop == null ||
                 _device1 == null || !_device1.IsInitialized ||
                 _device2 == null || !_device2.IsInitialized)
             {
@@ -303,11 +297,9 @@ namespace Teleoperation
                 return;
             }
 
-            // Each Start() resets its controller and its estimator, then ticks
-            // every 2 ms. Between the two calls robot 1 already tracks robot 2;
-            // dq is under MaxStartMismatch, so that first interval is harmless.
-            _controller1.Start();
-            _controller2.Start();
+            // One call: resets both controllers and both estimators, then starts
+            // the single 2 ms loop that drives the pair.
+            _loop.Start();
 
             _teleopRunning = true;
             bttnStartTeleop.Text        = "Detener teleoperación";
@@ -323,9 +315,8 @@ namespace Teleoperation
             if (!_teleopRunning) return;
             _teleopRunning = false;
 
-            // Stop() kills the timer and zeroes the torques on both devices.
-            try { _controller1?.Stop(); } catch { }
-            try { _controller2?.Stop(); } catch { }
+            // Kills the timer and zeroes the torques on both devices.
+            try { _loop?.Stop(); } catch { }
 
             bttnStartTeleop.Text       = "Iniciar teleoperación";
             teleopLabelValue.Text      = "Detenida";

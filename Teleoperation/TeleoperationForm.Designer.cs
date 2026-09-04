@@ -31,6 +31,7 @@ namespace Teleoperation
             encoders2          = new GeomagicEncodersControl();
             grpForceSensor     = new GroupBox();
             forceSensorControl = new ForceSensorControl();
+            plotsControl       = new TeleoperationPlotsControl();
             statusStrip1       = new StatusStrip();
             status1LabelPrefix = new ToolStripStatusLabel();
             status1LabelValue  = new ToolStripStatusLabel();
@@ -197,11 +198,11 @@ namespace Teleoperation
             // grpForceSensor
             //
             // Same panel as experiment 1; the ATI sensor is mounted on the remote
-            // (slave) robot.
+            // (slave) robot. Sits under the two encoder readouts, spanning them.
             grpForceSensor.Controls.Add(forceSensorControl);
-            grpForceSensor.Location = new Point(452, 130);
+            grpForceSensor.Location = new Point(12, 482);
             grpForceSensor.Name = "grpForceSensor";
-            grpForceSensor.Size = new Size(517, 300);
+            grpForceSensor.Size = new Size(420, 300);
             grpForceSensor.TabIndex = 3;
             grpForceSensor.TabStop = false;
             grpForceSensor.Text = "Sensor de fuerza (robot remoto)";
@@ -211,8 +212,16 @@ namespace Teleoperation
             forceSensorControl.Dock = DockStyle.Fill;
             forceSensorControl.Location = new Point(3, 19);
             forceSensorControl.Name = "forceSensorControl";
-            forceSensorControl.Size = new Size(511, 278);
+            forceSensorControl.Size = new Size(414, 278);
             forceSensorControl.TabIndex = 0;
+            //
+            // plotsControl
+            //
+            plotsControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            plotsControl.Location = new Point(452, 130);
+            plotsControl.Name = "plotsControl";
+            plotsControl.Size = new Size(883, 652);
+            plotsControl.TabIndex = 4;
             //
             // statusStrip1
             //
@@ -220,7 +229,7 @@ namespace Teleoperation
             statusStrip1.Items.AddRange(new ToolStripItem[] { status1LabelPrefix, status1LabelValue, calib1LabelPrefix, calib1LabelValue, robotSeparator, status2LabelPrefix, status2LabelValue, calib2LabelPrefix, calib2LabelValue, readingSeparator, readingLabelPrefix, readingLabelValue, forceSeparator, forceLabelPrefix, forceLabelValue, teleopSeparator, teleopLabelPrefix, teleopLabelValue });
             statusStrip1.Name = "statusStrip1";
             statusStrip1.Size = new Size(1347, 22);
-            statusStrip1.TabIndex = 4;
+            statusStrip1.TabIndex = 5;
             //
             // status1LabelPrefix
             //
@@ -342,6 +351,7 @@ namespace Teleoperation
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1347, 859);
+            Controls.Add(plotsControl);
             Controls.Add(grpForceSensor);
             Controls.Add(encoders2);
             Controls.Add(encoders1);
@@ -373,8 +383,9 @@ namespace Teleoperation
         private Button  bttnStartTeleop;
         private GeomagicEncodersControl encoders1;
         private GeomagicEncodersControl encoders2;
-        private GroupBox                grpForceSensor;
-        private ForceSensorControl      forceSensorControl;
+        private GroupBox                   grpForceSensor;
+        private ForceSensorControl         forceSensorControl;
+        private TeleoperationPlotsControl  plotsControl;
         private StatusStrip          statusStrip1;
         private ToolStripStatusLabel status1LabelPrefix;
         private ToolStripStatusLabel status1LabelValue;
