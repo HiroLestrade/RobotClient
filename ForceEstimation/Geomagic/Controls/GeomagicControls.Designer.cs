@@ -1,7 +1,7 @@
 
 namespace ForceEstimation
 {
-    partial class GeomagicControl
+    partial class GeomagicControls
     {
         private System.ComponentModel.IContainer components = null;
 
@@ -224,7 +224,7 @@ namespace ForceEstimation
             timeLabelValue.Name = "timeLabelValue";
             timeLabelValue.Size = new Size(0, 17);
             //
-            // GeomagicControl
+            // GeomagicControls
             //
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -236,7 +236,7 @@ namespace ForceEstimation
             Controls.Add(encodersControl);
             Controls.Add(panel1);
             Controls.Add(statusStrip1);
-            Name = "GeomagicControl";
+            Name = "GeomagicControls";
             Size = new Size(1347, 816);
             configControl.ResumeLayout(false);
             panel1.ResumeLayout(false);

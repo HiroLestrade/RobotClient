@@ -21,7 +21,6 @@ namespace RobotClient
             btnExperiment2.Click += (_, _) => OpenExperiment(new TeleoperationForm());
             btnExperiment3.Click += (_, _) => NotImplementedYet(btnExperiment3.Text);
             btnExperiment4.Click += (_, _) => NotImplementedYet(btnExperiment4.Text);
-            btnExperiment5.Click += (_, _) => NotImplementedYet(btnExperiment5.Text);
         }
 
         /// <summary>

@@ -45,7 +45,7 @@ namespace ForceEstimation
             [new MedianFilter(15), new MedianFilter(15), new MedianFilter(15)];
 
         // Provides controller and trajectory names for the CSV filename.
-        // Set by GeomagicControl after construction.
+        // Set by GeomagicControls after construction.
         [System.ComponentModel.DesignerSerializationVisibility(
             System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public Func<(string controller, string trajectory)>? GetExportMetadata { get; set; }

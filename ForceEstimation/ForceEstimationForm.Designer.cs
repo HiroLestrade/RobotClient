@@ -15,44 +15,21 @@ namespace ForceEstimation
 
         private void InitializeComponent()
         {
-            pnlSelector = new Panel();
-            cmbRobot = new ComboBox();
-            lblRobot = new Label();
-            pnlHost = new Panel();
-            pnlSelector.SuspendLayout();
+            robotSelector = new RobotSelector();
+            pnlHost       = new Panel();
             SuspendLayout();
-            // 
-            // pnlSelector
-            // 
-            pnlSelector.Controls.Add(cmbRobot);
-            pnlSelector.Controls.Add(lblRobot);
-            pnlSelector.Dock = DockStyle.Top;
-            pnlSelector.Location = new Point(0, 0);
-            pnlSelector.Name = "pnlSelector";
-            pnlSelector.Size = new Size(1347, 40);
-            pnlSelector.TabIndex = 0;
-            // 
-            // cmbRobot
-            // 
-            cmbRobot.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbRobot.Items.AddRange(new object[] { "Geomagic Touch", "Viper X-300S" });
-            cmbRobot.Location = new Point(70, 8);
-            cmbRobot.Name = "cmbRobot";
-            cmbRobot.Size = new Size(150, 23);
-            cmbRobot.TabIndex = 1;
-            cmbRobot.SelectedIndexChanged += cmbRobot_SelectedIndexChanged;
-            // 
-            // lblRobot
-            // 
-            lblRobot.AutoSize = true;
-            lblRobot.Location = new Point(12, 12);
-            lblRobot.Name = "lblRobot";
-            lblRobot.Size = new Size(39, 15);
-            lblRobot.TabIndex = 0;
-            lblRobot.Text = "Robot";
-            // 
+            //
+            // robotSelector
+            //
+            robotSelector.Dock = DockStyle.Top;
+            robotSelector.Location = new Point(0, 0);
+            robotSelector.Name = "robotSelector";
+            robotSelector.Size = new Size(1347, 40);
+            robotSelector.TabIndex = 0;
+            //
             // pnlHost
-            // 
+            //
+            // Holds the control panel of whichever robot is selected.
             pnlHost.Dock = DockStyle.Fill;
             pnlHost.Location = new Point(0, 40);
             pnlHost.Name = "pnlHost";
@@ -63,19 +40,20 @@ namespace ForceEstimation
             //
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1347, 859);
+            ClientSize = new Size(1347, 979);
+            // The Viper panel's left column ends at y=917, under a 40 px selector,
+            // plus the window chrome — below this the Configuration tabs get clipped.
+            // Width can shrink: only the plots are anchored, and they take the slack.
+            MinimumSize = new Size(1000, 1020);
+            WindowState = FormWindowState.Maximized;
             Controls.Add(pnlHost);
-            Controls.Add(pnlSelector);
+            Controls.Add(robotSelector);
             Name = "ForceEstimationForm";
             Text = "Estimación de Fuerza";
-            pnlSelector.ResumeLayout(false);
-            pnlSelector.PerformLayout();
             ResumeLayout(false);
         }
 
-        private Panel pnlSelector;
-        private Label lblRobot;
-        private ComboBox cmbRobot;
-        private Panel pnlHost;
+        private RobotSelector robotSelector;
+        private Panel         pnlHost;
     }
 }

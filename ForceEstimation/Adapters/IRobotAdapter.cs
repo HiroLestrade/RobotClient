@@ -1,8 +1,18 @@
 namespace ForceEstimation
 {
     /// <summary>
-    /// Common contract for all robot implementations.
-    /// Adding a new robot type = implementing this interface + registering in RobotAdapterFactory.
+    /// The Geomagic's split between its panel and its device code.
+    ///
+    /// <para><b>This is not the project's robot abstraction.</b> It was written as
+    /// one — there was a factory that picked an adapter by robot name — but the
+    /// Viper panel was built without it and talks to <c>ViperDevice</c> directly,
+    /// so the factory and the Viper's adapter were deleted rather than left
+    /// looking current. What remains is used by exactly one arm, and the shape
+    /// below is that arm's: three joints, radians, and a Cartesian force of three
+    /// components.</para>
+    ///
+    /// <para>Anything that needs to serve both arms should take a narrow
+    /// interface of its own instead, the way <see cref="IGCodeRobot"/> does.</para>
     /// </summary>
     internal interface IRobotAdapter : IDisposable
     {

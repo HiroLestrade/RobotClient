@@ -1,6 +1,6 @@
 namespace ForceEstimation
 {
-    public partial class GeomagicControl : UserControl, IRobotHost
+    public partial class GeomagicControls : UserControl, IRobotHost
     {
         private readonly IRobotAdapter    _adapter;
         private readonly GCodeInterpreter _interpreter;
@@ -13,7 +13,7 @@ namespace ForceEstimation
         private int      _interpreterGeneration;
         private DateTime _interpreterRecordingStart;
 
-        public GeomagicControl()
+        public GeomagicControls()
         {
             InitializeComponent();
 
@@ -21,7 +21,7 @@ namespace ForceEstimation
                 () => (configControl.SelectedController, configControl.SelectedTrajectory);
 
             _adapter     = new GeomagicAdapter(this, configControl);
-            _interpreter = new GCodeInterpreter(_adapter, configControl);
+            _interpreter = new GCodeInterpreter(new GeomagicGCodeRobot(_adapter, configControl));
 
             encodersControl.ReadClicked         += (_, _)  => _adapter.ToggleReadEncoders();
             homeControl.GoHomeRequested         += (_, qf) => _adapter.GoHome(qf);

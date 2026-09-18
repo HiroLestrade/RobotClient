@@ -21,7 +21,6 @@ namespace RobotClient
             btnExperiment2 = new Button();
             btnExperiment3 = new Button();
             btnExperiment4 = new Button();
-            btnExperiment5 = new Button();
             SuspendLayout();
             //
             // lblTitle
@@ -76,7 +75,7 @@ namespace RobotClient
             btnExperiment3.Padding = new Padding(16, 0, 0, 0);
             btnExperiment3.Size = new Size(572, 52);
             btnExperiment3.TabIndex = 4;
-            btnExperiment3.Text = "3. ViperX300 — control y sensor de fuerza";
+            btnExperiment3.Text = "3. Teleoperación heterogénea — Geomagic y ViperX300";
             btnExperiment3.TextAlign = ContentAlignment.MiddleLeft;
             btnExperiment3.UseVisualStyleBackColor = true;
             //
@@ -88,28 +87,15 @@ namespace RobotClient
             btnExperiment4.Padding = new Padding(16, 0, 0, 0);
             btnExperiment4.Size = new Size(572, 52);
             btnExperiment4.TabIndex = 5;
-            btnExperiment4.Text = "4. Teleoperación heterogénea — Geomagic y ViperX300";
+            btnExperiment4.Text = "4. ViperX300 — control de fuerza";
             btnExperiment4.TextAlign = ContentAlignment.MiddleLeft;
             btnExperiment4.UseVisualStyleBackColor = true;
-            //
-            // btnExperiment5
-            //
-            btnExperiment5.Font = new Font("Segoe UI", 10F);
-            btnExperiment5.Location = new Point(24, 332);
-            btnExperiment5.Name = "btnExperiment5";
-            btnExperiment5.Padding = new Padding(16, 0, 0, 0);
-            btnExperiment5.Size = new Size(572, 52);
-            btnExperiment5.TabIndex = 6;
-            btnExperiment5.Text = "5. ViperX300 — control de fuerza";
-            btnExperiment5.TextAlign = ContentAlignment.MiddleLeft;
-            btnExperiment5.UseVisualStyleBackColor = true;
             //
             // MainMenuForm
             //
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(620, 420);
-            Controls.Add(btnExperiment5);
+            ClientSize = new Size(620, 360);
             Controls.Add(btnExperiment4);
             Controls.Add(btnExperiment3);
             Controls.Add(btnExperiment2);
@@ -131,6 +117,5 @@ namespace RobotClient
         private Button btnExperiment2;
         private Button btnExperiment3;
         private Button btnExperiment4;
-        private Button btnExperiment5;
     }
 }
